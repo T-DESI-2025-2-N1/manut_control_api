@@ -1,0 +1,19 @@
+{
+  "name": "manutcontrol-api-atividade-1",
+  "version": "2.0.0",
+  "description": "API didática ManutControl para testes funcionais",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.3"
+  }
+}
