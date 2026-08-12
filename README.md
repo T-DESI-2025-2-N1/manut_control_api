@@ -11,8 +11,6 @@ rotas com a lógica HTTP e SQL no mesmo arquivo, conexão separada e poucos arqu
 manutcontrol-api-atividade-1-sasse/
 ├── database/
 │   └── manutcontrol.sql
-├── docs/
-│   └── GUIA-DO-PROFESSOR.md
 ├── src/
 │   ├── config/
 │   │   └── db.js
