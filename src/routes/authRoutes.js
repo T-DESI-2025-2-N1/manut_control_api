@@ -26,6 +26,12 @@ router.post("/login", async (req, res) => {
       });
     }
 
+    if (!usuario.ativo || usuario.ativo == false) {
+      return res.status(403).json({
+        mensagem: "Este e-mail está inativo."
+      });
+    }
+
     return res.status(200).json({
       mensagem: "Login realizado com sucesso.",
       token: `token-${usuario.id}`,
