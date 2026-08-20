@@ -314,7 +314,7 @@ router.patch("/:id/concluir", async (req, res) => {
     }
 
     if (usuario.id != chamado.tecnico_id){
-      return res.status(403).json({ mensagem: "Somente o Técnico responsável pelo chamado pode conclui-lo"});
+      return res.status(403).json({ mensagem: "Somente o Técnico responsável pelo chamado pode conclui-lo."});
     }
 
     await db.query(
