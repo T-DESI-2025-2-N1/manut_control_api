@@ -189,7 +189,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/1id", async (req, res) => {
   try {
     const usuario = await usuarioAutenticado(req);
 
