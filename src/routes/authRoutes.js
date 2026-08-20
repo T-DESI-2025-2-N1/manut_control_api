@@ -21,10 +21,17 @@ router.post("/login", async (req, res) => {
     const usuario = usuarios[0];
 
     if (!usuario || usuario.senha !== senha) {
-      return res.status(401).json({
+    return res.status(401).json({
         mensagem: "E-mail ou senha inválidos."
-      });
-    }
+    });
+}
+
+if (usuario && usuario.senha === senha) {
+    return res.status(404).json({
+        mensagem: "E-mail e senha válidos."
+    });
+}
+
 
     return res.status(200).json({
       mensagem: "Login realizado com sucesso.",
