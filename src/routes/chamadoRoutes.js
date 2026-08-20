@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    if (descricao.length < 19 || descricao.length > 300) {
+    if (descricao.length < 20 || descricao.length > 300) {
       return res.status(400).json({
         mensagem: "A descrição deve possuir entre 20 e 300 caracteres."
       });
@@ -43,6 +43,10 @@ router.post("/", async (req, res) => {
 
     if (equipamentos.length === 0) {
       return res.status(404).json({ mensagem: "Equipamento não encontrado." });
+    }
+
+    if(!equipamentos[0].ativo){
+      return res.status(400).json({ mensagem: "Equipamento INATIVO. Não é possível abrir o chamado" });
     }
 
     const [resultado] = await db.query(
@@ -90,12 +94,13 @@ router.get("/meus", async (req, res) => {
         e.nome AS equipamento_nome,
         c.operador_id,
         c.tecnico_id
-      FROM chamados c
-      INNER JOIN equipamentos e ON e.id = c.equipamento_id
+      FROM chamados c 
+      INNER JOIN equipamentos e ON e.id = c.equipamento_id WHERE c.operador_id = ?
       ORDER BY c.id
-    `);
+    `, usuario.id);
 
     return res.status(200).json(chamados);
+
   } catch (erro) {
     console.error(erro);
     return res.status(500).json({ mensagem: "Erro ao consultar chamados." });

@@ -72,6 +72,14 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ mensagem: "Código e nome são obrigatórios." });
     }
 
+    const[resultCodigo] = await db.query(
+      "SELECT * FROM equipamentos WHERE codigo = ?", [codigo]
+    );
+
+    if(resultCodigo.length > 0){
+      return res.status(400).json({ mensagem: "Não foi possível cadastrar. Código já exitente." });
+    }
+
     const [resultado] = await db.query(
       "INSERT INTO equipamentos (codigo, nome, ativo) VALUES (?, ?, ?)",
       [codigo, nome, ativo]
