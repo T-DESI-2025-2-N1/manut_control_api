@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    if (descricao.length < 19 || descricao.length > 300) {
+    if (descricao.length < 20 || descricao.length > 300) {
       return res.status(400).json({
         mensagem: "A descrição deve possuir entre 20 e 300 caracteres."
       });
@@ -36,30 +36,45 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ mensagem: "Prioridade inválida." });
     }
 
-    const [equipamentos] = await db.query(
-      "SELECT id, ativo FROM equipamentos WHERE id = ?",
-      [equipamentoId]
-    );
 
-    if (equipamentos.length === 0) {
-      return res.status(404).json({ mensagem: "Equipamento não encontrado." });
-    }
+const [equipamentos] = await db.query(
+    `SELECT id, ativo
+     FROM equipamentos
+     WHERE id = ?`,
+    [equipamentoId]
+);
 
-    const [resultado] = await db.query(
-      `INSERT INTO chamados
-       (equipamento_id, operador_id, descricao, prioridade, status, data_abertura)
-       VALUES (?, ?, ?, ?, 'Aguardando atendimento', NOW())`,
-      [equipamentoId, usuario.id, descricao, prioridade]
-    );
 
-    return res.status(201).json({
-      id: resultado.insertId,
-      equipamentoId,
-      operadorId: usuario.id,
-      descricao,
-      prioridade,
-      status: "Aguardando atendimento"
+if (equipamentos.length === 0) {
+    return res.status(404).json({
+        mensagem: "Equipamento não encontrado."
     });
+}
+
+
+if (!equipamentos[0].ativo) {
+    return res.status(400).json({
+        mensagem: "Não é possível abrir chamado para equipamento inativo."
+    });
+}
+
+
+const [resultado] = await db.query(
+    `INSERT INTO chamados
+     (equipamento_id, operador_id, descricao, prioridade, status, data_abertura)
+     VALUES (?, ?, ?, ?, 'Aguardando atendimento', NOW())`,
+    [equipamentoId, usuario.id, descricao, prioridade]
+);
+
+return res.status(201).json({
+    id: resultado.insertId,
+    equipamentoId,
+    operadorId: usuario.id,
+    descricao,
+    prioridade,
+    status: "Aguardando atendimento"
+});
+
   } catch (erro) {
     console.error(erro);
     return res.status(500).json({ mensagem: "Erro ao abrir chamado." });
@@ -78,6 +93,7 @@ router.get("/meus", async (req, res) => {
       return res.status(403).json({ mensagem: "Somente Operador pode usar esta consulta." });
     }
 
+         
     const [chamados] = await db.query(`
       SELECT
         c.id,
@@ -92,8 +108,9 @@ router.get("/meus", async (req, res) => {
         c.tecnico_id
       FROM chamados c
       INNER JOIN equipamentos e ON e.id = c.equipamento_id
+      WHERE c.operador_id = ?
       ORDER BY c.id
-    `);
+    `,[usuario.id]);
 
     return res.status(200).json(chamados);
   } catch (erro) {
