@@ -72,6 +72,17 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ mensagem: "Código e nome são obrigatórios." });
     }
 
+    const [equipmentoExistente] = await db.query(
+      "SELECT id FROM equipamentos WHERE codigo = ?",
+      [codigo]
+    );
+
+    if (equipmentoExistente.length > 0) {
+      return res.status(400).json({
+        mensagem: "Já tem um equipamento cadastrado com esse código, por favor, cadastre com outro!"
+      });
+    };
+
     const [resultado] = await db.query(
       "INSERT INTO equipamentos (codigo, nome, ativo) VALUES (?, ?, ?)",
       [codigo, nome, ativo]
