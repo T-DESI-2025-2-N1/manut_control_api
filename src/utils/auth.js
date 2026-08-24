@@ -23,7 +23,7 @@ export async function usuarioAutenticado(req) {
     "SELECT id, nome, email, perfil, ativo FROM usuarios WHERE id = ?",
     [id]
   );
-
+ console.log('erro de conexão')
   return usuarios[0] ?? null;
 }
 

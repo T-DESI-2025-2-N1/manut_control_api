@@ -4,6 +4,8 @@ import { db } from "../config/db.js";
 const router = Router();
 
 router.post("/login", async (req, res) => {
+
+  console.log('conectado ao banco de dados')
   try {
     const { email, senha } = req.body;
 
