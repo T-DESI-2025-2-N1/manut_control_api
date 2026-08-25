@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    if (descricao.length < 19 || descricao.length > 300) {
+    if (descricao.length < 20 || descricao.length > 300) {
       return res.status(400).json({
         mensagem: "A descrição deve possuir entre 20 e 300 caracteres."
       });
@@ -45,12 +45,20 @@ router.post("/", async (req, res) => {
       return res.status(404).json({ mensagem: "Equipamento não encontrado." });
     }
 
+    if (equipamentos[0].ativo === 0) {
+      return res.status(403).json({
+        mensagem: 'Equipamento inativo.'
+      });
+    }
+
     const [resultado] = await db.query(
       `INSERT INTO chamados
        (equipamento_id, operador_id, descricao, prioridade, status, data_abertura)
        VALUES (?, ?, ?, ?, 'Aguardando atendimento', NOW())`,
       [equipamentoId, usuario.id, descricao, prioridade]
     );
+
+    
 
     return res.status(201).json({
       id: resultado.insertId,

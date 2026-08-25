@@ -4,8 +4,6 @@ import { db } from "../config/db.js";
 const router = Router();
 
 router.post("/login", async (req, res) => {
-
-  console.log('conectado ao banco de dados')
   try {
     const { email, senha } = req.body;
 
@@ -25,6 +23,12 @@ router.post("/login", async (req, res) => {
     if (!usuario || usuario.senha !== senha) {
       return res.status(401).json({
         mensagem: "E-mail ou senha inválidos."
+      });
+    }
+
+    if (usuario.ativo === 0) {
+      return res.status(403).json({
+        mensagem: 'Usuário inativo. Acesso negado.'
       });
     }
 
