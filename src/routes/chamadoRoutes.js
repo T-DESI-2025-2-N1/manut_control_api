@@ -313,6 +313,10 @@ router.patch("/:id/concluir", async (req, res) => {
       });
     }
 
+    if (usuario.id != chamado.tecnico_id){
+      return res.status(403).json({ mensagem: "Somente o Técnico responsável pelo chamado pode conclui-lo."});
+    }
+
     await db.query(
       `UPDATE chamados
        SET solucao = ?, status = 'Concluído', data_conclusao = NOW()
@@ -322,7 +326,8 @@ router.patch("/:id/concluir", async (req, res) => {
 
     return res.status(200).json({
       mensagem: "Chamado concluído com sucesso.",
-      status: "Concluído"
+      status: "Concluído",
+      mensagem:(usuario)
     });
   } catch (erro) {
     console.error(erro);
