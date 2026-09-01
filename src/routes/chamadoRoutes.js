@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    if (descricao.length < 19 || descricao.length > 300) {
+    if (descricao.length < 20 || descricao.length > 300) {
       return res.status(400).json({
         mensagem: "A descrição deve possuir entre 20 e 300 caracteres."
       });
