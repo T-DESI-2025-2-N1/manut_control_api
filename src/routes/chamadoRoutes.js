@@ -24,7 +24,8 @@ router.post("/", async (req, res) => {
       });
     }
 
-    if (descricao.length < 19 || descricao.length > 300) {
+    // corrigido para permitir realmente entre 20 e 300 caracteres
+    if (descricao.length < 20 || descricao.length > 300) {
       return res.status(400).json({
         mensagem: "A descrição deve possuir entre 20 e 300 caracteres."
       });
@@ -43,6 +44,11 @@ router.post("/", async (req, res) => {
 
     if (equipamentos.length === 0) {
       return res.status(404).json({ mensagem: "Equipamento não encontrado." });
+    }
+
+    // correção pra verificar se o equipamento está ativo
+    if (!equipamentos[0].ativo) {
+      return res.status(400).json({ mensagem: "Equipamento inativo." });
     }
 
     const [resultado] = await db.query(
@@ -290,7 +296,8 @@ router.patch("/:id/concluir", async (req, res) => {
       return res.status(400).json({ mensagem: "A solução aplicada é obrigatória." });
     }
 
-    if (solucao.length < 29) {
+    // corrigido pra realmenter precisar de no mínimo 30 caracteres
+    if (solucao.length < 30) {
       return res.status(400).json({
         mensagem: "A solução deve possuir no mínimo 30 caracteres."
       });
