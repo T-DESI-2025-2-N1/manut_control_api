@@ -26,6 +26,12 @@ router.post("/login", async (req, res) => {
       });
     }
 
+    if (!usuario.ativo){
+      return res.status(403).json({
+        mensagem: "Usuário Inativo!"
+      });
+    };
+
     return res.status(200).json({
       mensagem: "Login realizado com sucesso.",
       token: `token-${usuario.id}`,

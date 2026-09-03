@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    if (descricao.length < 19 || descricao.length > 300) {
+    if (descricao.length < 20 || descricao.length > 300) {
       return res.status(400).json({
         mensagem: "A descrição deve possuir entre 20 e 300 caracteres."
       });
@@ -311,6 +311,10 @@ router.patch("/:id/concluir", async (req, res) => {
       return res.status(400).json({
         mensagem: "Somente chamado em atendimento pode ser concluído."
       });
+    }
+
+    if (usuario.id != chamado.tecnico_id){
+      return res.status(403).json({ mensagem: "Somente o Técnico responsável pelo chamado pode conclui-lo"});
     }
 
     await db.query(
