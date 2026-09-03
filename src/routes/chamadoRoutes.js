@@ -290,7 +290,7 @@ router.patch("/:id/concluir", async (req, res) => {
       return res.status(400).json({ mensagem: "A solução aplicada é obrigatória." });
     }
 
-    if (solucao.length < 29) {
+    if (solucao.length < 30) {
       return res.status(400).json({
         mensagem: "A solução deve possuir no mínimo 30 caracteres."
       });
