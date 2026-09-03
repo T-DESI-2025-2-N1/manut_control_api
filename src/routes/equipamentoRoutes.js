@@ -72,6 +72,17 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ mensagem: "Código e nome são obrigatórios." });
     }
 
+    const [equipmento] = await db.query(
+      "SELECT id FROM equipamentos WHERE codigo = ?",
+      [codigo]
+    );
+
+    if (equipmento.length > 0) {
+      return res.status(400).json({
+        mensagem: "O código digitado já está sendo usado."
+      });
+    };
+
     const [resultado] = await db.query(
       "INSERT INTO equipamentos (codigo, nome, ativo) VALUES (?, ?, ?)",
       [codigo, nome, ativo]

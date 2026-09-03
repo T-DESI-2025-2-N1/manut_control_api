@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    if (descricao.length < 19 || descricao.length > 300) {
+    if (descricao.length < 20 || descricao.length > 300) {
       return res.status(400).json({
         mensagem: "A descrição deve possuir entre 20 e 300 caracteres."
       });
@@ -290,7 +290,7 @@ router.patch("/:id/concluir", async (req, res) => {
       return res.status(400).json({ mensagem: "A solução aplicada é obrigatória." });
     }
 
-    if (solucao.length < 29) {
+    if (solucao.length < 30) {
       return res.status(400).json({
         mensagem: "A solução deve possuir no mínimo 30 caracteres."
       });
@@ -313,6 +313,10 @@ router.patch("/:id/concluir", async (req, res) => {
       });
     }
 
+    if (usuario.id != chamado.tecnico_id){
+      return res.status(403).json({ mensagem: "Somente o Técnico responsável pelo chamado pode conclui-lo."});
+    }
+
     await db.query(
       `UPDATE chamados
        SET solucao = ?, status = 'Concluído', data_conclusao = NOW()
@@ -322,7 +326,8 @@ router.patch("/:id/concluir", async (req, res) => {
 
     return res.status(200).json({
       mensagem: "Chamado concluído com sucesso.",
-      status: "Concluído"
+      status: "Concluído",
+      mensagem:(usuario)
     });
   } catch (erro) {
     console.error(erro);
