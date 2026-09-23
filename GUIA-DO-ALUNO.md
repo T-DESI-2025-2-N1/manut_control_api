@@ -58,7 +58,7 @@ Corpo:
 }
 ```
 
-Quando o login for aceito, a resposta contém um token, por exemplo:
+Quando o login for aceito, a  resposta contém um token, por exemplo:
 
 ```json
 {
