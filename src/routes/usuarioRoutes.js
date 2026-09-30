@@ -43,6 +43,7 @@ router.get("/:id", async (req, res) => {
       "SELECT id, nome, email, perfil, ativo FROM usuarios WHERE id = ?",
       [req.params.id]
     );
+    
 
     if (usuarios.length === 0) {
       return res.status(404).json({ mensagem: "Usuário não encontrado." });
